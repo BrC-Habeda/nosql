@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-from query import pipeline
+import os
 
 # Function to compare results
 def compare_results(expected_results, actual_results):
@@ -16,16 +16,20 @@ def compare_results(expected_results, actual_results):
 client = MongoClient('mongodb://localhost:27017/')
 db = client['testdb']  # Replace 'testdb' with your actual database name
 
-# Execute aggregation pipeline
-result = list(db.project.aggregate(pipeline))
+# Get all query files in the current directory
+query_files = [file for file in os.listdir() if file.endswith('.js')]
 
-# Expected results
-expected_result = [
-    {"project_id": 1, "average_experience_years": 2.0},
-    {"project_id": 2, "average_experience_years": 2.5}
-]
+# Iterate over each query file
+for query_file in query_files:
+    # Import the query pipeline and expected result from the file
+    query_module = __import__(query_file[:-3])  # Remove '.js' extension
+    pipeline = query_module.pipeline
+    expected_result = query_module.expected_result
+    
+    # Execute aggregation pipeline
+    result = list(db.project.aggregate(pipeline))
+    
+    # Test the results
+    assert compare_results(expected_result, result), f"Test for {query_file} failed: Results do not match expected"
 
-# Test the results
-assert compare_results(expected_result, result), "Test failed: Results do not match expected"
-
-print("Test passed: Results match expected")
+    print(f"Test for {query_file} passed: Results match expected")
