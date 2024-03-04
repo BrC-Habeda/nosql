@@ -4,4 +4,4 @@
 
 ## Test Results
 
-[![NoSQLTest](https://github.com/BrC-Habeda/da/actions/workflows/sql-test.yml/badge.svg)](https://github.com/BrC-Habeda/da/actions/workflows/nosql-test.yml)
+[![NoSQLTest](https://github.com/BrC-Habeda/da/actions/workflows/nosql-test.yml/badge.svg)](https://github.com/BrC-Habeda/da/actions/workflows/nosql-test.yml)
